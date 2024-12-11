@@ -59,10 +59,9 @@ public class PublicDashboard extends Application {
 
         // TableView for Events
         TableView<Event> eventTable = new TableView<>();
-        eventTable.setItems(events);
-        eventTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        eventTable.setItems(DataStore.events); // Use shared DataStore
 
-        // Define columns
+        // Define Columns
         TableColumn<Event, String> titleCol = new TableColumn<>("Title");
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
 
@@ -73,6 +72,8 @@ public class PublicDashboard extends Application {
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         eventTable.getColumns().addAll(titleCol, dateCol, locationCol);
+        
+      
 
         // Add components to the pane
         eventPane.setTop(searchBox);

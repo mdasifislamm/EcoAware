@@ -32,7 +32,7 @@ public class AdminDashboard extends Application {
 
         // TableView setup
         TableView<Event> eventTable = new TableView<>();
-        eventTable.setItems(events);
+        eventTable.setItems(DataStore.events); 
         eventTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Define columns
@@ -83,14 +83,18 @@ public class AdminDashboard extends Application {
         dialog.showAndWait().ifPresent(input -> {
             String[] details = input.split(",");
             if (details.length == 3) {
-                events.add(new Event(details[0], details[1], details[2]));
-                eventTable.refresh();
+            	 DataStore.events.add(new Event(details[0], details[1], details[2])); // Add to shared list
+                 DataStore.saveEvents(); // Save to file
+                 eventTable.refresh(); // Refresh the table
             } else {
                 showAlert("Error", "Invalid input. Use the format: Title,Date,Location");
             }
         });
     }
-
+    
+    
+    
+    
     // Edit Event
     private void editEvent(TableView<Event> eventTable) {
         Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
@@ -107,7 +111,8 @@ public class AdminDashboard extends Application {
                     selectedEvent.setTitle(details[0]);
                     selectedEvent.setDate(details[1]);
                     selectedEvent.setLocation(details[2]);
-                    eventTable.refresh();
+                    DataStore.saveEvents(); // Save to file
+                    eventTable.refresh(); // Refresh the table
                 } else {
                     showAlert("Error", "Invalid input. Use the format: Title,Date,Location");
                 }
@@ -121,12 +126,15 @@ public class AdminDashboard extends Application {
     private void deleteEvent(TableView<Event> eventTable) {
         Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
         if (selectedEvent != null) {
-            events.remove(selectedEvent);
-            eventTable.refresh();
+            DataStore.events.remove(selectedEvent); // Remove from shared list
+            DataStore.saveEvents(); // Save to file
+            eventTable.refresh(); // Refresh the table
         } else {
             showAlert("Error", "No event selected. Please select an event to delete.");
         }
     }
+
+
 
     // Show alert
     private void showAlert(String title, String message) {
